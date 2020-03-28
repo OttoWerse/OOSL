@@ -9,7 +9,7 @@ class Student:
         self.last_name = last_name
         self.mat_nr = mat_nr
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String conversion for class "Student\""""
         return f'{self.last_name}, {self.first_name}: {self.mat_nr}'
 
@@ -28,7 +28,7 @@ class Student:
 
     def get_course_participants(self, course):
         """generates a list of all students in a given course"""
-        return course.participants
+        return course.get_participants()
 
 
 class Course:
@@ -38,17 +38,24 @@ class Course:
         self.name = name
         self.participants = participants
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String conversion for class "Student\""""
-        return f'{self.course_id}, {self.name}: {self.participants}'
+        return f'{self.course_id}, {self.name}: {self.get_participants()}'
 
     def enroll(self, student):
         """Enrolls a student"""
         self.participants.append(student)
 
+    def get_participants(self):
+        """generates a list of all students in a given course"""
+        r = ''
+        for p in self.participants:
+            r += str(p)
+        return r
+
 
 if __name__ == '__main__':
-    s = Student('Tim', 'Garbe', 13374269)
+    s = Student('Arn', 'O\'Nym', 13374269)
     print(s)
     c = Course(420, 'Angewandte Rattenhörnchenologie')
     s.enroll(c)
