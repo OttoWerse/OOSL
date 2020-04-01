@@ -40,10 +40,5 @@ def print_progress():
         threading.Timer(1.0, print_progress).start()
 
 
-def printit():
-    threading.Timer(5.0, printit).start()
-    print("Hello, World!")
-
-
 if __name__ == '__main__':
     record()
