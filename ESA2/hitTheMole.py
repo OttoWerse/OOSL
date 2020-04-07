@@ -7,11 +7,11 @@ import random
 pygame.init()
 
 # Display
-size_x = 640
-size_y = 480
+size_x = 1280
+size_y = 720
 size = (size_x, size_y)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption('Hit the Mole')
+pygame.display.set_caption('Fix the bug!')
 
 
 #
@@ -20,8 +20,8 @@ class Mole(pygame.sprite.Sprite):
         # Super
         pygame.sprite.Sprite.__init__(self)
         # Sizes
-        self.size_x = 100
-        self.size_y = 100
+        self.size_x = 50
+        self.size_y = 50
         # Load Image
         self.image = pygame.image.load('mole.png')
         self.image = pygame.transform.scale(self.image, (self.size_x, self.size_y))
@@ -72,21 +72,29 @@ sprite_group.add(shovel)
 bg = pygame.image.load('background.png')
 bg = pygame.transform.scale(bg, (size))
 
-bg_hit = pygame.Surface(size)
-bg_hit = bg_hit.convert()
-bg_hit.fill((255, 0, 0))
+bg_hit = pygame.image.load('hit-background.png')
+bg_hit = pygame.transform.scale(bg_hit, (size))
 
 font_size = 25
 font = pygame.font.Font(None, font_size)
 
 # Action --> Alter
 # Variables
+# Program escape variable
 keepGoing = True
+# Variable to prevent double hits
+isHit = False
+# Hit counter
 hitCounter = 0
+# Move timer (decrease to increase difficulty)
+moveTime = 2000
+# New clock
 clock = pygame.time.Clock()
-moveTime = 1000
+# Initialize update loop
 pygame.time.set_timer(USEREVENT, 200)
-text = font.render(f'Moles: {hitCounter}', True, Color('white'))
+# Set initial text
+text = font.render(f'Bugfixes: {hitCounter}', True, Color('white'))
+# Display initial text
 
 # Loop
 while keepGoing:
@@ -95,30 +103,49 @@ while keepGoing:
 
     # Events
     for event in pygame.event.get():
+        # Exit the program
         if event.type == QUIT:
             keepGoing = False
             break
+        # On mouse click
         elif event.type == MOUSEBUTTONDOWN:
+            # If the mole is hit
             if mole.hit(pygame.mouse.get_pos()):
-                mole.cry()
-                hitCounter += 1
-                screen.blit(bg_hit, (0, 0))
-                break
+                # and the mole hasn't been hit already
+                if not isHit:
+                    # Mark mole as hit (un-hittable)
+                    isHit = True
+                    # Play hit sound
+                    mole.cry()
+                    # Increase hit counter and difficulty
+                    hitCounter += 1
+                    moveTime = int(moveTime // 1.01)
+                    # Show hit image
+                    screen.blit(bg_hit, (0, 0))
+                    pygame.display.flip()
+                    # Wait a bit
+                    pygame.time.delay(250)
+                    # Update text to show new counter
+                    text = font.render(f'Bugfixes: {hitCounter}', True, Color('white'))
+                    # Break
+                    break
         elif event.type == USEREVENT:
+            # change mole position
             mole.flee()
+            # Mark mole as hittable
+            isHit = False
+            # restart timer
             pygame.time.set_timer(USEREVENT, moveTime)
-            screen.blit(bg, (0, 0))
-            sprite_group.update()
-            sprite_group.draw(screen)
-            text = font.render(f'WLAN Probleme: {hitCounter}', True, Color('white'))
-            screen.blit(text, (10, (size_y - font_size) / 2))
 
-
+    # Refresh
     pygame.display.flip()
 
+    # Update Screen
     screen.blit(bg, (0, 0))
+    # update sprites
     sprite_group.update()
     sprite_group.draw(screen)
-    screen.blit(text, (10, (size_y - font_size) / 2))
+    # Update text
+    screen.blit(text, (10, 10))
 
     # Redisplay
