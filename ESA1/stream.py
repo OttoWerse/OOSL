@@ -10,10 +10,10 @@ progress = None
 
 @click.command()
 @click.option('--stream_url', default='http://rbb-edge-2070.fra-lg.cdn.addradio.net/rbb/fritz/live/mp3/128/stream.mp3')
-@click.option('--dateiname', default='myRadio.mp3')
+@click.option('--filename', default='myRadio.mp3')
 @click.option('--duration', default=30)
 def record(stream_url, duration, dateiname):
-    # click.echo("{}, {}, {}".format(stream_url, duration, dateiname))
+    # click.echo("{}, {}, {}".format(stream_url, duration, filename))
     with open(dateiname, 'wb') as f:
         global progress
         progress = duration

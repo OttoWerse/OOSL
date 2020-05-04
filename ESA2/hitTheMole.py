@@ -119,7 +119,7 @@ while keepGoing:
                     mole.cry()
                     # Increase hit counter and difficulty
                     hitCounter += 1
-                    moveTime = int(moveTime // 1.01)
+                    moveTime = int(moveTime // 1.05)
                     # Show hit image
                     screen.blit(bg_hit, (0, 0))
                     pygame.display.flip()
